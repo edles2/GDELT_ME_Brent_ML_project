@@ -15,7 +15,7 @@ try:
 except ImportError:
     from benchmark import majority_class_benchmark, rolling_volatility_benchmark
 
-PROCESSED_DIR = Path(__file__).parents[3] / "data" / "processed"
+PROCESSED_DIR = Path(__file__).parents[2] / "data" / "processed"
 
 FEATURE_COLS = [
     "n_events",

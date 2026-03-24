@@ -31,7 +31,7 @@ def download_brent(start: str = START_DATE, end: str = END_DATE) -> pd.DataFrame
 
 
 if __name__ == "__main__":
-    out_dir = Path(__file__).parents[3] / "data" / "raw" / "brent"
+    out_dir = Path(__file__).parents[2] / "data" / "raw" / "brent"
     out_dir.mkdir(parents=True, exist_ok=True)
     df = download_brent()
     out_path = out_dir / "brent_raw.parquet"

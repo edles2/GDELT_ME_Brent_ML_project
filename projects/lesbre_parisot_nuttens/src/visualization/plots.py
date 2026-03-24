@@ -7,7 +7,7 @@ import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
 
-FIGURES_DIR = Path(__file__).parents[3] / "notebooks" / "figures"
+FIGURES_DIR = Path(__file__).parents[2] / "notebooks" / "figures"
 
 # Notable geopolitical events for annotation
 NOTABLE_EVENTS = {

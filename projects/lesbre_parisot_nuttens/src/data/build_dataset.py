@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pandas as pd
 
-PROCESSED_DIR = Path(__file__).parents[3] / "data" / "processed"
+PROCESSED_DIR = Path(__file__).parents[2] / "data" / "processed"
 HORIZON = 3  # trading days ahead for the target
 
 
@@ -37,7 +37,7 @@ def build_dataset() -> pd.DataFrame:
         Final merged DataFrame (also saved to data/processed/final_dataset.parquet).
     """
     gdelt_path = PROCESSED_DIR / "gdelt_features.parquet"
-    brent_path = Path(__file__).parents[3] / "data" / "raw" / "brent" / "brent_raw.parquet"
+    brent_path = Path(__file__).parents[2] / "data" / "raw" / "brent" / "brent_raw.parquet"
 
     if not gdelt_path.exists():
         raise FileNotFoundError(

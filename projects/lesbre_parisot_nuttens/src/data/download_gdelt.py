@@ -114,5 +114,5 @@ def download_range(start: str, end: str, output_dir: Path) -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    raw_dir = Path(__file__).parents[3] / "data" / "raw" / "gdelt"
+    raw_dir = Path(__file__).parents[2] / "data" / "raw" / "gdelt"
     download_range("2015-01-01", "2024-12-31", raw_dir)

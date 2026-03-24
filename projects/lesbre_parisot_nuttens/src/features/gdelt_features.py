@@ -8,8 +8,8 @@ import pandas as pd
 
 logger = logging.getLogger(__name__)
 
-RAW_GDELT_DIR = Path(__file__).parents[3] / "data" / "raw" / "gdelt"
-PROCESSED_DIR = Path(__file__).parents[3] / "data" / "processed"
+RAW_GDELT_DIR = Path(__file__).parents[2] / "data" / "raw" / "gdelt"
+PROCESSED_DIR = Path(__file__).parents[2] / "data" / "processed"
 
 # CAMEO event codes associated with conflict / violence
 CONFLICT_PREFIXES = ("18", "19", "20")
