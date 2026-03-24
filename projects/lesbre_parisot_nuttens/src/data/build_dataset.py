@@ -34,10 +34,19 @@ def build_dataset() -> pd.DataFrame:
         - data/raw/brent/brent_raw.parquet
 
     Returns:
-        Final merged DataFrame saved to data/processed/final_dataset.parquet.
+        Final merged DataFrame (also saved to data/processed/final_dataset.parquet).
     """
     gdelt_path = PROCESSED_DIR / "gdelt_features.parquet"
     brent_path = Path(__file__).parents[3] / "data" / "raw" / "brent" / "brent_raw.parquet"
+
+    if not gdelt_path.exists():
+        raise FileNotFoundError(
+            f"GDELT features not found at {gdelt_path}. Run gdelt_features.py first."
+        )
+    if not brent_path.exists():
+        raise FileNotFoundError(
+            f"Brent data not found at {brent_path}. Run download_brent.py first."
+        )
 
     gdelt = pd.read_parquet(gdelt_path)
     brent = pd.read_parquet(brent_path)

@@ -44,17 +44,6 @@ USEFUL_COLS = [
 ]
 
 
-def _is_middle_east_event(row: pd.Series) -> bool:
-    """Return True if any actor or action location is in the Middle East."""
-    return bool(
-        ME_COUNTRY_CODES.intersection({
-            row["Actor1CountryCode"],
-            row["Actor2CountryCode"],
-            row["ActionGeo_CountryCode"],
-        })
-    )
-
-
 def download_day(date: str) -> pd.DataFrame:
     """Download and filter GDELT events for a single day.
 
@@ -115,7 +104,11 @@ def download_range(start: str, end: str, output_dir: Path) -> None:
             continue
 
         logger.info("Downloading %s", date_str)
-        df = download_day(date_str)
+        try:
+            df = download_day(date_str)
+        except requests.RequestException as exc:
+            logger.warning("Failed to download %s: %s", date_str, exc)
+            continue
         df.to_csv(out_path, index=False)
 
 

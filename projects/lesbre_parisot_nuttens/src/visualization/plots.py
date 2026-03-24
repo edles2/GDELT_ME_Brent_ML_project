@@ -6,10 +6,8 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 FIGURES_DIR = Path(__file__).parents[3] / "notebooks" / "figures"
-FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
 # Notable geopolitical events for annotation
 NOTABLE_EVENTS = {
@@ -47,19 +45,20 @@ def plot_brent_with_gdelt(df: pd.DataFrame, save: bool = True) -> plt.Figure:
         if dt in df.index or (df.index.min() <= dt <= df.index.max()):
             for ax in (ax1, ax2):
                 ax.axvline(dt, color="orange", linewidth=0.8, linestyle=":")
-        ax2.annotate(
-            label,
-            xy=(dt, df["goldstein_mean"].get(dt, 0)),
-            xytext=(10, 10),
-            textcoords="offset points",
-            fontsize=7,
-            color="darkorange",
-        )
+            ax2.annotate(
+                label,
+                xy=(dt, df["goldstein_mean"].get(dt, 0)),
+                xytext=(10, 10),
+                textcoords="offset points",
+                fontsize=7,
+                color="darkorange",
+            )
 
     ax2.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     fig.tight_layout()
 
     if save:
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
         fig.savefig(FIGURES_DIR / "brent_vs_gdelt.png", dpi=150)
     return fig
 
@@ -91,7 +90,11 @@ def plot_feature_importance(
     fig.tight_layout()
 
     if save:
-        fig.savefig(FIGURES_DIR / f"feature_importance_{model_name.lower().replace(' ', '_')}.png", dpi=150)
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+        fig.savefig(
+            FIGURES_DIR / f"feature_importance_{model_name.lower().replace(' ', '_')}.png",
+            dpi=150,
+        )
     return fig
 
 
@@ -125,6 +128,7 @@ def plot_cumulative_returns(
     fig.tight_layout()
 
     if save:
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
         fig.savefig(FIGURES_DIR / "cumulative_returns.png", dpi=150)
     return fig
 
@@ -154,5 +158,6 @@ def plot_cv_accuracy(results_by_model: dict, save: bool = True) -> plt.Figure:
     fig.tight_layout()
 
     if save:
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
         fig.savefig(FIGURES_DIR / "cv_accuracy.png", dpi=150)
     return fig

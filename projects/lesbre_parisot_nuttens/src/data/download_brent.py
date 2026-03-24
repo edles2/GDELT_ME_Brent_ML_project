@@ -18,9 +18,11 @@ def download_brent(start: str = START_DATE, end: str = END_DATE) -> pd.DataFrame
         end: End date in YYYY-MM-DD format.
 
     Returns:
-        DataFrame with columns [Date, Close, Volume], indexed by Date.
+        DataFrame with columns [brent_close, brent_volume], indexed by Date.
     """
     raw = yf.download(BRENT_TICKER, start=start, end=end, progress=False, auto_adjust=True)
+    if isinstance(raw.columns, pd.MultiIndex):
+        raw.columns = raw.columns.get_level_values(0)
     df = raw[["Close", "Volume"]].copy()
     df.index.name = "Date"
     df.columns = ["brent_close", "brent_volume"]

@@ -2,7 +2,7 @@
 
 **Course:** Machine Learning for Finance
 **Track:** Alternative Data
-**Group:** lesbre / nom2 / nom3
+**Group:** lesbre / parisot / nuttens
 
 ---
 
@@ -28,7 +28,7 @@ Can a geopolitical tension score built from GDELT news events predict the short-
 ## Repository Structure
 
 ```
-projects/lesbre_nom2_nom3/
+projects/lesbre_parisot_nuttens/
 ├── data/
 │   ├── raw/gdelt/          # Per-day filtered GDELT CSV files (gitignored)
 │   ├── raw/brent/          # Brent parquet (gitignored)
@@ -51,21 +51,32 @@ projects/lesbre_nom2_nom3/
 
 ---
 
-## Reproducing Results
+## Installation
 
 ```bash
-# 1. Download data  (~several hours for 10 years of GDELT)
-python src/data/download_brent.py
+uv sync   # or: pip install -e .
+```
+
+## Reproduce
+
+```bash
+# 1. Download GDELT events (~several hours for 10 years)
 python src/data/download_gdelt.py
 
-# 2. Build features
+# 2. Download Brent prices
+python src/data/download_brent.py
+
+# 3. Aggregate GDELT into daily features
 python src/features/gdelt_features.py
 
-# 3. Merge and construct target
+# 4. Merge features + prices, construct target
 python src/data/build_dataset.py
 
-# 4. Train models
+# 5. Train and evaluate models vs benchmarks
 python src/models/train.py
+
+# 6. Generate all presentation figures
+python src/visualization/plots.py
 ```
 
 ---

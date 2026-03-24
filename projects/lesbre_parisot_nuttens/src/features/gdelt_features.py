@@ -1,9 +1,12 @@
 """Aggregate raw GDELT events into daily features for the Middle East."""
 
+import logging
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 RAW_GDELT_DIR = Path(__file__).parents[3] / "data" / "raw" / "gdelt"
 PROCESSED_DIR = Path(__file__).parents[3] / "data" / "processed"
@@ -64,7 +67,8 @@ def build_gdelt_features(raw_dir: Path = RAW_GDELT_DIR) -> pd.DataFrame:
         date_str = path.stem  # YYYYMMDD
         try:
             df = pd.read_csv(path, dtype=str, low_memory=False)
-        except Exception:
+        except Exception as exc:
+            logger.warning("Failed to process %s: %s", path.name, exc)
             continue
 
         if df.empty:
@@ -92,7 +96,8 @@ def _add_derived_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     df = df.copy()
 
-    # 7-day rolling mean of Goldstein score
+    # Note: 7-day calendar rolling — may cover fewer than 7 observations
+    # if GDELT has gaps (e.g., weekends with no events)
     df["goldstein_7d_ma"] = df["goldstein_mean"].rolling(7, min_periods=3).mean()
 
     # Binary spike flag: current Goldstein drops > 1.5 std below 7-day average

@@ -10,6 +10,11 @@ from sklearn.metrics import accuracy_score, classification_report, confusion_mat
 from sklearn.model_selection import TimeSeriesSplit
 from sklearn.preprocessing import StandardScaler
 
+try:
+    from .benchmark import majority_class_benchmark, rolling_volatility_benchmark
+except ImportError:
+    from benchmark import majority_class_benchmark, rolling_volatility_benchmark
+
 PROCESSED_DIR = Path(__file__).parents[3] / "data" / "processed"
 
 FEATURE_COLS = [
@@ -111,7 +116,7 @@ def run_training() -> dict:
     """Train and compare all models using time-series CV.
 
     Returns:
-        Dictionary mapping model name to CV results.
+        Dictionary mapping model name to CV results and benchmark comparisons.
     """
     df = load_dataset()
     X = df[FEATURE_COLS].copy()
@@ -128,6 +133,27 @@ def run_training() -> dict:
         acc = mean_accuracy(results)
         all_results[name] = {"cv_results": results, "mean_accuracy": acc}
         print(f"{name}: mean CV accuracy = {acc:.4f}")
+
+    # Evaluate benchmarks on the last CV fold (most recent test period)
+    tscv = TimeSeriesSplit(n_splits=N_SPLITS)
+    last_train_idx, last_test_idx = list(tscv.split(X))[-1]
+
+    y_train_last = y.iloc[last_train_idx]
+    y_test_last = y.iloc[last_test_idx]
+    df_test_last = df.iloc[last_test_idx]
+
+    print("\n=== BENCHMARK: Majority Class ===")
+    bench_majority = majority_class_benchmark(y_train_last, y_test_last)
+    print(f"Accuracy: {bench_majority['accuracy']:.4f}")
+
+    print("\n=== BENCHMARK: Rolling Volatility ===")
+    bench_vol = rolling_volatility_benchmark(df_test_last)
+    print(f"Accuracy: {bench_vol['accuracy']:.4f}")
+
+    all_results["benchmarks"] = {
+        "majority_class": bench_majority,
+        "rolling_volatility": bench_vol,
+    }
 
     return all_results
 
