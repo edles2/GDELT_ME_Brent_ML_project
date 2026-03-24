@@ -161,3 +161,34 @@ def plot_cv_accuracy(results_by_model: dict, save: bool = True) -> plt.Figure:
         FIGURES_DIR.mkdir(parents=True, exist_ok=True)
         fig.savefig(FIGURES_DIR / "cv_accuracy.png", dpi=150)
     return fig
+
+
+def plot_feature_correlation(df: pd.DataFrame, save: bool = True) -> plt.Figure:
+    """Correlation heatmap between GDELT features and the target variable.
+
+    Args:
+        df: Final dataset with GDELT features and 'target' column.
+            'brent_close' and 'brent_volume' are excluded from the matrix.
+        save: If True, save the figure.
+
+    Returns:
+        Matplotlib Figure object.
+    """
+    exclude = {"brent_close", "brent_volume"}
+    feature_cols = [c for c in df.columns if c not in exclude]
+    corr = df[feature_cols].corr()
+
+    fig, ax = plt.subplots(figsize=(12, 10))
+    im = ax.imshow(corr.values, cmap="RdBu_r", vmin=-1, vmax=1, aspect="auto")
+    plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    ax.set_xticks(range(len(corr.columns)))
+    ax.set_yticks(range(len(corr.columns)))
+    ax.set_xticklabels(corr.columns, rotation=45, ha="right", fontsize=8)
+    ax.set_yticklabels(corr.columns, fontsize=8)
+    ax.set_title("Feature Correlation Matrix (incl. target)")
+    fig.tight_layout()
+
+    if save:
+        FIGURES_DIR.mkdir(parents=True, exist_ok=True)
+        fig.savefig(FIGURES_DIR / "feature_correlation.png", dpi=150)
+    return fig
