@@ -23,7 +23,7 @@ def majority_class_benchmark(y_train: pd.Series, y_test: pd.Series) -> dict:
     return {
         "model": "majority_class",
         "accuracy": accuracy_score(y_test, y_pred),
-        "report": classification_report(y_test, y_pred, output_dict=True),
+        "report": classification_report(y_test, y_pred, output_dict=True, zero_division=0),
     }
 
 
@@ -55,5 +55,5 @@ def rolling_volatility_benchmark(
     return {
         "model": "rolling_volatility",
         "accuracy": accuracy_score(y_test, y_pred),
-        "report": classification_report(y_test, y_pred, output_dict=True),
+        "report": classification_report(y_test, y_pred, output_dict=True, zero_division=0),
     }
